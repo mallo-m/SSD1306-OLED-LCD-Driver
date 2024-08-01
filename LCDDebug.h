@@ -89,13 +89,35 @@ void lcdCommand(unsigned short cmd);
  */
 void lcdString(unsigned char *str);
 
+/**
+    <b>Function prototype: </b>void lcdSetCursor(unsigned char x, unsigned char y);<br/>
+    <b>Summary:</b><br/>
+    <b>Description: </b>Set the cursor to the specified X,Y position (0 offseted)<br/>
+    <b>Parameters:</b><br/>
+        <ul>
+            <li><b>unsigned char x</b>: Horizontal position of the cursor (must be between 0 and 15 inclusive)</li>
+            <li><b>unsigned char y</b>: Vertical position of the cursor (0 for the top line, 1 for the bottom line) </li>
+        </ul>
+    <b>Returns:</b>void<br/>
+    <b>Example:</b><br/>
+    <code>
+        lcdSetCursor(7, 1);     //Move cursor to the 8th character of the bottom row
+    </code>
+
+    <b>Remarks:</b>
+ */
+void lcdSetCursor(unsigned char x, unsigned char y);
+
 // LCD 16x2 commands used
 // https://www.electronicwings.com/sensors-modules/lcd-16x2-display-module
-# define LCD_CMD_8BIT 0x38
+# define LCD_CMD_MOD_4BIT 0x28
+# define LCD_CMD_MOD_8BIT 0x38
 # define LCD_CMD_DISPLAY_ON_CUR_OFF 0x0c
 # define LCD_CMD_CUR_AUTOINC 0x06
 # define LCD_CMD_CLS 0x01
 # define LCD_CMD_CUR_0_0 0x80
 # define LCD_CMD_CUR_1_0 0xc0
+# define LCD_CMD_MOV_CUR_LEFT 0x10
+# define LCD_CMD_MOV_CUR_RIGHT 0x14
 
 #endif	/* XC_HEADER_TEMPLATE_H */

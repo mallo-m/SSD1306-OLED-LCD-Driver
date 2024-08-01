@@ -16,7 +16,7 @@ void lcdInit(void)
     TRISDbits.RD0 = OUTPUT;                     //Register Select pin on RD0
     TRISDbits.RD1 = OUTPUT;                     //Enable pin on RD1
 
-    lcdCommand(LCD_CMD_8BIT);                   //Init in 8-bit mode
+    lcdCommand(LCD_CMD_MOD_8BIT);               //Init in 8-bit mode
     lcdCommand(LCD_CMD_DISPLAY_ON_CUR_OFF);     //Display ON, cursor OFF
     lcdCommand(LCD_CMD_CUR_AUTOINC);            //Cursor auto-increment
     lcdCommand(LCD_CMD_CLS);                    //Clear screen
@@ -48,5 +48,17 @@ void lcdString(unsigned char *str)
     {
         lcdChar(*str);
         str++;
+    }
+}
+
+void lcdSetCursor(unsigned char x, unsigned char y)
+{
+    if (y == 0)
+        lcdCommand(LCD_CMD_CUR_0_0);
+    else
+        lcdCommand(LCD_CMD_CUR_1_0);
+    
+    for (int i = 0; i < x; i++) {
+        lcdCommand(LCD_CMD_MOV_CUR_RIGHT);
     }
 }

@@ -18,7 +18,7 @@ void main(void)
     _DEBUG_LED_OFF;             //Start with debug LED off
     lcdInit();
     lcdString("LCD Ready");
-    lcdCommand(LCD_CMD_CUR_1_0);
+    lcdSetCursor(0, 1);
     lcdString("ACK: awaiting...");
     while(1)
     {
