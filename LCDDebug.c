@@ -12,6 +12,10 @@
 // https://www.electronicwings.com/8051/lcd16x2-interfacing-in-8-bit-with-8051 
 void lcdInit(void)
 {
+    TRISC = OUTPUT;                             //Entire PORT C is output
+    TRISDbits.RD0 = OUTPUT;                     //Register Select pin on RD0
+    TRISDbits.RD1 = OUTPUT;                     //Enable pin on RD1
+
     lcdCommand(LCD_CMD_8BIT);                   //Init in 8-bit mode
     lcdCommand(LCD_CMD_DISPLAY_ON_CUR_OFF);     //Display ON, cursor OFF
     lcdCommand(LCD_CMD_CUR_AUTOINC);            //Cursor auto-increment

@@ -14,18 +14,17 @@ void main(void)
 {
     OSCCONbits.IRCF = 0b111;    //Select 16MHz frequency
     TRISAbits.TRISA3 = 0;       //RA3 pin is output (Debug LED)
-    TRISC = 0;                  //Entire PORT C is output
-    TRISDbits.RD0 = 0;          //Register Select pin on RD0
-    TRISDbits.RD1 = 0;          //Enable pin on RD1
 
-    PORTAbits.RA3 = 0;          //Start with debug LED off
+    _DEBUG_LED_OFF;             //Start with debug LED off
     lcdInit();
-    lcdString("ACK Received !");
+    lcdString("LCD Ready");
+    lcdCommand(LCD_CMD_CUR_1_0);
+    lcdString("ACK: awaiting...");
     while(1)
     {
-        PORTAbits.RA3 = 1;
+        _DEBUG_LED_ON;
         __delay_ms(1000);
-        PORTAbits.RA3 = 0;
+        _DEBUG_LED_OFF;
         __delay_ms(1000);
     }
     return;

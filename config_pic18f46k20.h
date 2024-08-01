@@ -58,5 +58,12 @@
 # pragma config EBTRB = OFF      // Boot Block Table Read Protection bit (Boot Block (000000-0007FFh) not protected from table reads executed in other blocks)
 
 # define _XTAL_FREQ 16000000
+# define ON 1;
+# define OFF 0;
+# define INPUT 1;
+# define OUTPUT 0;
+# define _DEBUG_LED PORTAbits.RA3
+# define _DEBUG_LED_ON _DEBUG_LED = ON
+# define _DEBUG_LED_OFF _DEBUG_LED = OFF
 
 #endif

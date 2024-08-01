@@ -1,24 +1,3 @@
-/* Microchip Technology Inc. and its subsidiaries.  You may use this software 
- * and any derivatives exclusively with Microchip products. 
- * 
- * THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS".  NO WARRANTIES, WHETHER 
- * EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED 
- * WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A 
- * PARTICULAR PURPOSE, OR ITS INTERACTION WITH MICROCHIP PRODUCTS, COMBINATION 
- * WITH ANY OTHER PRODUCTS, OR USE IN ANY APPLICATION. 
- *
- * IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
- * INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
- * WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS 
- * BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE.  TO THE 
- * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS 
- * IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF 
- * ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
- *
- * MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE 
- * TERMS. 
- */
-
 /* 
  * File: LCDDebug.h
  * Author: mmousson@protonmail.com
@@ -34,10 +13,8 @@
 # include <xc.h> // include processor files - each processor file is guarded.  
 # include "config_pic18f46k20.h"
 
-// TODO Insert C++ class definitions if appropriate
-
 /**
-    <b>Function prototype:</b>void lcdInit(void);<br/>
+    <b>Function prototype: </b>void lcdInit(void);<br/>
     <b>Summary:</b><br/>
     <b>Description:</b>LCD Initialization function<br/>
     <b>Parameters:</b>void<br/>
@@ -52,25 +29,73 @@
     <b>Remarks:</b>Call this function at bootup before using the LCD screen
  */
 void lcdInit(void);
+
+/**
+    <b>Function prototype: </b>lcdChar(unsigned char chr);<br/>
+    <b>Summary:</b><br/>
+    <b>Description:</b>Put a single char onto LCD screen<br/>
+    <b>Parameters:</b><br/>
+        <ul>
+            <li><b>unsigned char chr</b>: The character to print out</li>
+        </ul>
+    <b>Returns:</b>void<br/>
+    <b>Example:</b><br/>
+    <code>
+        lcdChar('H');<br/>
+        lcdChar('E');<br/>
+        lcdChar('L');<br/>
+        lcdChar('L');<br/>
+        lcdChar('O');
+    </code>
+
+    <b>Remarks:</b>Cursor will automatically move to the right if called after lcdInit();
+ */
 void lcdChar(unsigned char chr);
+
+/**
+    <b>Function prototype: </b>lcdCommand(unsigned short cmd);<br/>
+    <b>Summary:</b><br/>
+    <b>Description: </b>Send an instruction to the screen controller<br/>
+    <b>Parameters:</b><br/>
+        <ul>
+            <li><b>unsigned short cmd</b>: The command to send to the screen controller</li>
+        </ul>
+    <b>Returns:</b>void<br/>
+    <b>Example:</b><br/>
+    <code>
+        lcdCommand(LCD_CMD_CLS);        //Clear entire screen<br/>
+        lcdCommand(LCD_CMD_CUR_0_0);    //Move cursor to top-left corner
+    </code>
+
+    <b>Remarks:</b>
+ */
 void lcdCommand(unsigned short cmd);
+
+/**
+    <b>Function prototype: </b>void lcdString(unsigned char *str);<br/>
+    <b>Summary:</b><br/>
+    <b>Description: </b>Print an entire string to LCD<br/>
+    <b>Parameters:</b><br/>
+        <ul>
+            <li><b>unsigned char *str</b>: The string to display</li>
+        </ul>
+    <b>Returns:</b>void<br/>
+    <b>Example:</b><br/>
+    <code>
+        lcdString("Hello There");
+    </code>
+
+    <b>Remarks:</b>
+ */
 void lcdString(unsigned char *str);
 
+// LCD 16x2 commands used
+// https://www.electronicwings.com/sensors-modules/lcd-16x2-display-module
 # define LCD_CMD_8BIT 0x38
 # define LCD_CMD_DISPLAY_ON_CUR_OFF 0x0c
 # define LCD_CMD_CUR_AUTOINC 0x06
 # define LCD_CMD_CLS 0x01
 # define LCD_CMD_CUR_0_0 0x80
-
-# ifdef	__cplusplus
-extern "C" {
-# endif /* __cplusplus */
-
-    // TODO If C++ is being used, regular C code needs function names to have C 
-    // linkage so the functions can be used by the c code. 
-
-# ifdef	__cplusplus
-}
-# endif /* __cplusplus */
+# define LCD_CMD_CUR_1_0 0xc0
 
 #endif	/* XC_HEADER_TEMPLATE_H */
