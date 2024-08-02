@@ -8,7 +8,7 @@
 // This is a guard condition so that contents of this file are not included
 // more than once.  
 #ifndef XC_LCD_DEBUG_H
-# define	XC_LCD_DEBUG_H
+# define XC_LCD_DEBUG_H
 
 # include <xc.h> // include processor files - each processor file is guarded.  
 # include "config_pic18f46k20.h"
@@ -107,6 +107,8 @@ void lcdString(unsigned char *str);
     <b>Remarks:</b>
  */
 void lcdSetCursor(unsigned char x, unsigned char y);
+
+void lcdClearline(unsigned char lineno);
 
 // LCD 16x2 commands used
 // https://www.electronicwings.com/sensors-modules/lcd-16x2-display-module

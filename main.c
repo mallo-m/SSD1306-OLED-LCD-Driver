@@ -9,6 +9,10 @@
 #include <xc.h>
 
 #include "LCDDebug.h"
+#include "SSD1306.h"
+
+#define SSPCONN1_SSPEN (1 << 5)
+#define SSPCONN1_SSPM_I2C_MASTER_MODE 0b1000
 
 void main(void)
 {
@@ -20,6 +24,18 @@ void main(void)
     lcdString("LCD Ready");
     lcdSetCursor(0, 1);
     lcdString("ACK: awaiting...");
+
+    SSD1306_Init();
+    
+    lcdSetCursor(0, 1);
+    if (SSPCON1bits.SSPEN) {
+        lcdClearline(1);
+        lcdString("I2C started");
+    } else {
+        lcdClearline(1);
+        lcdString("I2C failed");
+    }
+    
     while(1)
     {
         _DEBUG_LED_ON;

@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>LCDDebug.h</itemPath>
       <itemPath>config_pic18f46k20.h</itemPath>
+      <itemPath>SSD1306.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -21,6 +22,7 @@
                    projectFiles="true">
       <itemPath>main.c</itemPath>
       <itemPath>LCDDebug.c</itemPath>
+      <itemPath>SSD1306.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
@@ -160,6 +162,7 @@
         <property key="event.recorder.debugger.behavior" value="Running"/>
         <property key="event.recorder.enabled" value="false"/>
         <property key="event.recorder.scvd.files" value=""/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="lastid" value=""/>
         <property key="memories.aux" value="false"/>
