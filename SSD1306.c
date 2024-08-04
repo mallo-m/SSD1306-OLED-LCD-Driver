@@ -172,6 +172,17 @@ static void SSD1306_ClearPage(uint8_t pageno)
     I2C_SendBuffer(0x0);
 }
 
+static void SSD1306_ClearScreen()
+{
+    for (int y = 0; y < 8; y++)
+    {
+        for (int x = 0; x < 128; x++)
+        {
+            screen[y][x] = 0x00;
+        }
+    }
+}
+
 static void SSD1306_UpdateScreen()
 {
     for (int y = 0; y < 8; y++)
@@ -196,8 +207,6 @@ static void SSD1306_PutPixel(uint8_t x, uint8_t y, uint8_t value)
 
     SSD1306_ConvertCoordinates(x, y, &pageno, &byteno, &bitno);
     screen[pageno][byteno] |= (value << bitno);
-    if (x % 4 == 0)
-        SSD1306_UpdateScreen();
 }
 
 static void SSD1306_DrawLine(uint8_t x1, uint8_t x2, uint8_t y1, uint8_t y2)
@@ -220,10 +229,10 @@ static void SSD1306_DrawLine(uint8_t x1, uint8_t x2, uint8_t y1, uint8_t y2)
         trace_y = -trace_y;
     }
     
+    SSD1306_PutPixel(x1, y1, SSD1306_PIXEL_ON);
     if (delta_y < delta_x)
     {
         D = (delta_y << 1) - delta_x;
-        SSD1306_PutPixel(x1, y1, SSD1306_PIXEL_ON);
         while (x1 != x2)
         {
             x1 += trace_x;
@@ -239,7 +248,6 @@ static void SSD1306_DrawLine(uint8_t x1, uint8_t x2, uint8_t y1, uint8_t y2)
     else
     {
         D = delta_y - (delta_x << 1);
-        SSD1306_PutPixel(x1, y1, SSD1306_PIXEL_ON);
         while (y1 != y2)
         {
             y1 += trace_y;
@@ -251,6 +259,29 @@ static void SSD1306_DrawLine(uint8_t x1, uint8_t x2, uint8_t y1, uint8_t y2)
             D -= 2 * delta_x;
             SSD1306_PutPixel(x1, y1, SSD1306_PIXEL_ON);
         }
+    }
+}
+
+static void SSD1306_PutChar(char chr, uint8_t x, uint8_t y)
+{   
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            SSD1306_PutPixel(x + i, y + j, (Font_5_8[chr - 0x20][i] >> j) & 0b1);
+        }
+    }
+}
+
+static void SSD1306_PutString(char *str, uint8_t x, uint8_t y)
+{
+    uint8_t offset;
+    
+    offset = 0;
+    while (str[offset] != '\0')
+    {
+        SSD1306_PutChar(str[offset], x + (offset * 6), y);
+        offset++;
     }
 }
 
@@ -296,22 +327,34 @@ void SSD1306_Init()
     
     __delay_ms(2000);
 
+    SSD1306_ClearScreen();
     SSD1306_UpdateScreen();
     lcdClearline(1);
-    lcdString("Screen Updated !");
-    __delay_ms(1000);
+    lcdString("Screen Cleared !");
     
-    SSD1306_DrawLine(32, 64, 17, 64);
-    SSD1306_DrawLine(96, 64, 17, 64);
-    SSD1306_DrawLine(32, 37, 16, 1);
-    SSD1306_DrawLine(96, 91, 16, 1);
-    SSD1306_DrawLine(37, 58, 1, 1);
-    SSD1306_DrawLine(59, 64, 1, 16);
-    SSD1306_DrawLine(64, 69, 16, 1);
-    SSD1306_DrawLine(69, 91, 1, 1);
+    //SSD1306_DrawLine(32, 64, 17, 64);
+    //SSD1306_DrawLine(96, 64, 17, 64);
+    //SSD1306_DrawLine(32, 37, 16, 1);
+    //SSD1306_DrawLine(96, 91, 16, 1);
+    //SSD1306_DrawLine(37, 58, 1, 1);
+    //SSD1306_DrawLine(59, 64, 1, 16);
+    //SSD1306_DrawLine(64, 69, 16, 1);
+    //SSD1306_DrawLine(69, 91, 1, 1);
+    
+    //SSD1306_PutChar('!', 32, 32);
+    
+    SSD1306_PutString("Booting Up...", 25, 4);
+    SSD1306_PutString("IP:  --", 1, 20);
+    SSD1306_PutString("MAC: --", 1, 36);
+    SSD1306_PutString("Discovering...", 1, 52);
+    SSD1306_UpdateScreen();
+    
+    __delay_ms(3000);
+    SSD1306_ClearScreen();
+    SSD1306_PutString("Shadow ETH Ready", 16, 4);
+    SSD1306_PutString("IP: 192.168.1.199", 1, 20);
+    SSD1306_PutString("MAC: dead:beef:1337", 1, 36);
     SSD1306_UpdateScreen();
 
-    lcdClearline(1);
-    lcdString("Pixel put ?");
-    __delay_ms(3000);
+    __delay_ms(1000);
 }

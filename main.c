@@ -21,7 +21,7 @@ void main(void)
 
     _DEBUG_LED_OFF;             //Start with debug LED off
     lcdInit();
-    lcdString("LCD Ready");
+    lcdString("System boot OK");
     lcdSetCursor(0, 1);
     lcdString("ACK: awaiting...");
 
@@ -30,7 +30,7 @@ void main(void)
     lcdSetCursor(0, 1);
     if (SSPCON1bits.SSPEN) {
         lcdClearline(1);
-        lcdString("I2C started");
+        lcdString("Awaiting packets");
     } else {
         lcdClearline(1);
         lcdString("I2C failed");
