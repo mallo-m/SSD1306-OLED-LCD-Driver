@@ -184,7 +184,6 @@ static void SSD1306_UpdateScreen()
 static void SSD1306_ConvertCoordinates(uint8_t x, uint8_t y, uint8_t *pageno, uint8_t *byteno, uint8_t *bitno)
 {
     *byteno = x - 1;
-    //*pageno = 2 * ((y - 1) / 16) + ((y - 1) % 16) % 2;
     *pageno = pagesDispatcher[y - 1];
     *bitno = ((y - 1) / 2) % 8;
 }
@@ -196,7 +195,63 @@ static void SSD1306_PutPixel(uint8_t x, uint8_t y, uint8_t value)
     uint8_t bitno;
 
     SSD1306_ConvertCoordinates(x, y, &pageno, &byteno, &bitno);
-    screen[pageno][byteno] = (value << bitno);
+    screen[pageno][byteno] |= (value << bitno);
+    if (x % 4 == 0)
+        SSD1306_UpdateScreen();
+}
+
+static void SSD1306_DrawLine(uint8_t x1, uint8_t x2, uint8_t y1, uint8_t y2)
+{
+    int16_t D;
+    int16_t delta_x, delta_y;
+    int16_t trace_x, trace_y;
+    
+    trace_x = trace_y = 1;
+    delta_x = x2 - x1;
+    delta_y = y2 - y1;
+    if (delta_x < 0)
+    {
+        delta_x = -delta_x;
+        trace_x = -trace_x;
+    }
+    if (delta_y < 0)
+    {
+        delta_y = -delta_y;
+        trace_y = -trace_y;
+    }
+    
+    if (delta_y < delta_x)
+    {
+        D = (delta_y << 1) - delta_x;
+        SSD1306_PutPixel(x1, y1, SSD1306_PIXEL_ON);
+        while (x1 != x2)
+        {
+            x1 += trace_x;
+            if (D >= 0)
+            {
+                y1 += trace_y;
+                D -= 2 * delta_x;
+            }
+            D += 2 * delta_y;
+            SSD1306_PutPixel(x1, y1, SSD1306_PIXEL_ON);
+        }
+    }
+    else
+    {
+        D = delta_y - (delta_x << 1);
+        SSD1306_PutPixel(x1, y1, SSD1306_PIXEL_ON);
+        while (y1 != y2)
+        {
+            y1 += trace_y;
+            if (D <= 0)
+            {
+                x1 += trace_x;
+                D += 2 * delta_y;
+            }
+            D -= 2 * delta_x;
+            SSD1306_PutPixel(x1, y1, SSD1306_PIXEL_ON);
+        }
+    }
 }
 
 void SSD1306_Init()
@@ -246,15 +301,14 @@ void SSD1306_Init()
     lcdString("Screen Updated !");
     __delay_ms(1000);
     
-    uint8_t pageno;
-    uint8_t byteno;
-    uint8_t bitno;
-
-
-    for (int pix = 1; pix <= 64; pix++)
-    {
-        SSD1306_PutPixel(pix, pix, SSD1306_PIXEL_ON);
-    }
+    SSD1306_DrawLine(32, 64, 17, 64);
+    SSD1306_DrawLine(96, 64, 17, 64);
+    SSD1306_DrawLine(32, 37, 16, 1);
+    SSD1306_DrawLine(96, 91, 16, 1);
+    SSD1306_DrawLine(37, 58, 1, 1);
+    SSD1306_DrawLine(59, 64, 1, 16);
+    SSD1306_DrawLine(64, 69, 16, 1);
+    SSD1306_DrawLine(69, 91, 1, 1);
     SSD1306_UpdateScreen();
 
     lcdClearline(1);
