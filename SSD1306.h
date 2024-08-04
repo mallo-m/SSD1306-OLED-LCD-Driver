@@ -35,6 +35,10 @@
 # define SSD1306_NORMAL_DISPLAY                 0xA6
 # define SSD1306_DEACTIVATE_SCROLL              0x2E
 # define SSD1306_DISPLAY_ON                     0xAF
+# define SSD1306_SET_COLUMN_ADDR                0x21
+
+# define SSD1306_PIXEL_ON                       0b1
+# define SSD1306_PIXEL_OFF                      0b0
 
 void SSD1306_Init();
 
